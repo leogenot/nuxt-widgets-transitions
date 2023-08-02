@@ -32,6 +32,7 @@ const { data } = await useEndpoint('/api/dummy-endpoint', {
                 title: 'widget 1',
                 target: null,
               },
+              isGlobal: true,
               isPresentOnMobile: true,
             },
           },

@@ -431,6 +431,7 @@ const widgetClass = new (class Widget {
             $el: item.$el,
             cb: item.cb,
             once: item.once,
+            isGlobal: item.isGlobal,
             trigger: ScrollTrigger.create({
                 trigger: item.$el,
                 endTrigger: $body,
@@ -445,7 +446,7 @@ const widgetClass = new (class Widget {
         }
         this.totalHeight += item.element.getBoundingClientRect().height
 
-        // console.log('items:: ', this.items, this.totalHeight, item.element.getBoundingClientRect().height, $body)
+        console.log('items:: ', this.items, this.totalHeight, item.element.getBoundingClientRect().height, $body)
         if (!this.isEnabled) {
             this.items[id].trigger.disable()
         }
@@ -678,9 +679,10 @@ export default defineNuxtPlugin(nuxtApp => {
             // Keep actual element ID if already set
             $el.id = $el?.getAttribute('id') || `reveal-id-${id}`
             $el.dataset.reveal = id
-
-            viewClass.addTrigger(id, item)
-            viewClass.enable()
+            setTimeout(() => {
+                viewClass.addTrigger(id, item)
+                viewClass.enable()
+            }, 2000)
 
             useListen('v-view-pause', () => {
                 viewClass.disable()
@@ -720,7 +722,7 @@ export default defineNuxtPlugin(nuxtApp => {
     nuxtApp.vueApp.directive('widget', {
         mounted($el, bind) {
             if (!constants.ENABLE_V_VIEW) return
-
+            console.log('v-widget-mounted', bind.value)
             // Return if value is set to false
             if (typeof bind.value === 'boolean' && !bind.value) {
                 return
@@ -739,6 +741,7 @@ export default defineNuxtPlugin(nuxtApp => {
                 once: !!bind.modifiers.once,
                 widget: false,
                 progress: false,
+                isGlobal: bind.value ? bind.value : false,
             }
 
             let propertyValue
@@ -793,6 +796,9 @@ export default defineNuxtPlugin(nuxtApp => {
             }
             // widgetClass.totalHeight = $el.dataset.widget.getBoundingClientRect().height
             // console.log($el.dataset.widget, widgetClass.totalHeight, widgetClass)
+
+
+            //TODO remove only if not global
 
             const id = Number($el.dataset.widget)
 

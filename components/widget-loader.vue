@@ -27,10 +27,18 @@ watch(container, () => {
   //   })
   // }
 })
+
+// onMounted(() => {
+//   console.log(props.widget.data.isGlobal)
+// })
 </script>
 
 <template>
-  <div ref="container" class="widget-container" v-widget>
+  <div
+    ref="container"
+    class="widget-container"
+    v-widget:[widget]="widget.data.isGlobal"
+  >
     <div ref="element" class="widget-element">
       <div class="widget-mobile-scale-container">
         <component :is="components[widget.type]" v-bind="widget" />
